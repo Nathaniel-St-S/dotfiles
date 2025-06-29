@@ -1,5 +1,16 @@
 return {
   ["config"] = {
+    ["custom_keybindings"] = {
+      ["core:force-quit"] = {
+        [1] = "ctrl+shift+alt+q"
+      },
+      ["core:quit"] = {
+        [1] = "ctrl+alt+q"
+      },
+      ["root:close-or-quit"] = {
+        [1] = "ctrl+`"
+      }
+    },
     ["plugins"] = {
       ["minimap"] = {
         ["caret_color"] = {
