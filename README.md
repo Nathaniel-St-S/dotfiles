@@ -52,14 +52,7 @@ brew install stow
 
 ### 📁 Structure
 
-Each application or tool I configure gets its own folder. For example, the structure looks like this:
-dotfiles/
-├── install.sh
-├── zsh.rc
-├── .config/
-│   └── lite-xl/
-│   └── racket/
-│   └── klassy/
+The structure of this repo should mirror the structure of your $HOME directory
 
 ### 🚀 Usage
 
