@@ -1,0 +1,70 @@
+# Ignore system clutter
+.DS_Store
+Thumbs.db
+
+# Ignore compiled files
+*.pyc
+*.o
+*.class
+
+# Ignore logs and temp
+*.log
+*.swp
+*.bak
+*.tmp
+
+# Ignore editor backups
+*~
+
+# Optional: ignore all untracked config files except zsh and lite-xl
+!.config/
+!.config/lite-xl/
+zsh/.zcompdump*
+
+# Ignore Lite XL plugins or runtime data (if not versioned)
+#.config/lite-xl/plugins/
+#.config/lite-xl/addons/
+
+# Ignore Lite XL plugin manager downloads
+.config/lite-xl/libraries/
+.config/lite-xl/plugins/*/bin/
+.config/lite-xl/plugins/*/lib/
+.config/lite-xl/plugins/*/clangd*
+.config/lite-xl/plugins/*/node*
+
+#stow gitignore
+.dirstamp
+/Build
+/ChangeLog
+/MYMETA.json
+/MYMETA.yml
+/Makefile
+/Makefile.in
+/bin/chkstow
+/bin/stow
+/doc/stow.info
+/doc/version.texi
+/playground/
+tmp-testing-trees*/
+_build/
+autom4te.cache/
+blib/
+config.log
+config.status
+configure
+/cover_db/
+/doc/ChangeLog.OLD
+/doc/manual.pdf
+/doc/manual-single.html
+/doc/manual-single-old-texi2html.html
+/doc/manual-single-texi2html-wrapper.html
+/doc/manual-split/
+/doc/manual.texi
+/doc/stow.pdf
+/doc/stow.8
+/lib/Stow.pm
+/lib/Stow/Util.pm
+stamp-vti
+stow-[0-9].[0-9].[0-9].tar.*
+stow-[0-9].[0-9].[0-9]/
+Stow-v[0-9].[0-9].[0-9].tar.*

@@ -1,0 +1,16 @@
+[ButtonColors]
+ButtonBackgroundColorsActive=Accent
+ButtonIconColorsActive=Accent
+CloseButtonIconColorActive=AsSelected
+
+[ButtonSizing]
+FullHeightButtonSpacingRight=0
+LockFullHeightButtonSpacingLeftRight=false
+
+[Global]
+LookAndFeelSet=com.github.vinceliuice.Graphite-dark
+
+[Windeco]
+ButtonIconStyle=StyleOxygen
+IconSize=IconLarge
+WindowCornerRadius=10
