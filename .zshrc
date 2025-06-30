@@ -58,7 +58,6 @@ zinit snippet OMZP::kubectx
 zinit snippet OMZP::command-not-found
 zinit snippet OMZP::aliases
 
-
 # Load completions
 autoload -U compinit && compinit
 
