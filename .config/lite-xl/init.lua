@@ -1,11 +1,12 @@
--- put user settings here
 -- this module will be loaded after everything else when the application starts
+-- put user settings here
 -- it will be automatically reloaded when saved
 
 local core = require "core"
 local keymap = require "core.keymap"
 local config = require "core.config"
 local style = require "core.style"
+local lsp = require "plugins.lsp"
 
 ------------------------------ Themes ----------------------------------------
 

@@ -1,5 +1,6 @@
 local style = require "core.style"
 local common = require "core.common"
+local config = require "core.config"
 
 style.background = { common.color "#151515" }
 style.background2 = { common.color "#151515" }
@@ -27,3 +28,20 @@ style.syntax["literal"] = { common.color "#dfdfdf" }
 style.syntax["string"] = { common.color "#dfdfdf" }
 style.syntax["operator"] = { common.color "#01A870" }
 style.syntax["function"] = { common.color "#01A870" }
+
+-- -- Adjust specific elements for Racket syntax
+-- style.syntax["function"] = { common.color "#d0d0d0" }
+-- style.syntax["operator"] = { common.color "#01A870" }
+
+-- Plugin-specific theming
+-- LSP
+if config.plugins.lsp then
+  config.plugins.lsp.colors = {
+    error = "#e27878",
+    warning = "#e2a478",
+    info = "#b4be82",
+    hint = "#404040"
+  }
+end
+
+return style

@@ -1,2 +1,3 @@
 [KSplash]
-Theme=a2n.kuro
+Engine=KSplashQML
+Theme=com.github.vinceliuice.Graphite-dark

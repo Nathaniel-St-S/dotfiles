@@ -22,6 +22,12 @@ _darcs
 ^/LICENSE.*
 ^/COPYING
 
+# Lite-XL libraries that are too large for github
 libraries/jdk
 libraries/nodejs
 libraries/clangd_19.1.2
+
+# Setup scripts that i don't want linked to home
+setup_apps.sh
+stow.sh
+

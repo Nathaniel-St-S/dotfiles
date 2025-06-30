@@ -16,11 +16,6 @@ Thumbs.db
 # Ignore editor backups
 *~
 
-# Optional: ignore all untracked config files except zsh and lite-xl
-!.config/
-!.config/lite-xl/
-zsh/.zcompdump*
-
 # Ignore Lite XL plugins or runtime data (if not versioned)
 #.config/lite-xl/plugins/
 #.config/lite-xl/addons/

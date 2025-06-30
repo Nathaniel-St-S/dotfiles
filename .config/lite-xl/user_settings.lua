@@ -1,17 +1,19 @@
 return {
   ["config"] = {
     ["custom_keybindings"] = {
-      ["core:force-quit"] = {
-        [1] = "ctrl+shift+alt+q"
-      },
       ["core:quit"] = {
         [1] = "ctrl+alt+q"
-      },
-      ["root:close-or-quit"] = {
-        [1] = "ctrl+`"
       }
     },
+    ["disabled_plugins"] = {},
+    ["enabled_plugins"] = {
+      ["ephemeral_tabs"] = true
+    },
     ["plugins"] = {
+      ["bracketmatch"] = {
+        ["line_size"] = 1,
+        ["style"] = "frame"
+      },
       ["gitblame"] = {
         ["text_color"] = {
           [1] = 183,
@@ -32,6 +34,18 @@ return {
           [2] = 82,
           [3] = 87,
           [4] = 255
+        }
+      },
+      ["spellcheck"] = {
+        ["files"] = {
+          [1] = "%.txt$",
+          [2] = "%.md$",
+          [3] = "%.markdown$",
+          [4] = "%.c$",
+          [5] = "%.cpp$",
+          [6] = "%.rkt$",
+          [7] = "%.py$",
+          [8] = ""
         }
       },
       ["terminal"] = {
