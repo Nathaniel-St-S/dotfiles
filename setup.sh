@@ -71,13 +71,11 @@ install_lpm_and_plugins() {
     lintplus
     terminal
     align_carets
-    auto_insert
-    auto_save
+    autoinsert
+    autosave
     bracketmatch
     ephemeral_tabs
     indentguide
-    language_java
-    language_rust
     lsp_snippets
     minimap
     pdfview
