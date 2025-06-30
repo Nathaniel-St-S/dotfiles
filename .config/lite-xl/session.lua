@@ -1,1 +1,1 @@
-return {recents={}, window={[1]=1022,[2]=608,[3]=774,[4]=335,["n"]=4}, window_mode="normal", previous_find={}, previous_replace={}}
+return {recents={}, window={[1]=1536,[2]=864,[3]=384,[4]=216,["n"]=4}, window_mode="normal", previous_find={}, previous_replace={}}

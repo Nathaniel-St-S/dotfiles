@@ -1,5 +1,5 @@
 # 🗃️ dotfiles — My Configs, Backed Up with Stow
-  -Follow this video for advice [Setup Tutorial](https://www.youtube.com/watch?v=y6XCebnB9gs)
+  -Follow this video for advice: [Setup Tutorial](https://www.youtube.com/watch?v=y6XCebnB9gs)
 
 My personal dotfiles repo! This is where I version-control the configuration files that customize my development environment. Everything here is managed using [GNU Stow](https://www.gnu.org/software/stow/) to keep things clean, modular, and easily symlinked to my `$HOME` directory.
 
@@ -34,6 +34,17 @@ To clone and manage the repository.
   brew install git
   ```
 
+- **Install on Arch/Manjaro:**
+  ```
+  sudo pacman -Syu
+  sudo pacman -S git
+  ```
+
+#Make sure the package is properly installed with:
+  ```
+  git --version
+  ```
+
 ### 2. GNU Stow [GNU Stow](https://www.gnu.org/software/stow/)
 
 To manage symlinks from the repo into your home directory.
@@ -49,6 +60,11 @@ To manage symlinks from the repo into your home directory.
 brew install stow
 ```
 
+- **Install on Arch/Linux
+  ```
+  sudo pacman -Syu
+  sudo pacman -S stow
+
 
 ### 📁 Structure
 
@@ -58,13 +74,23 @@ The structure of this repo should mirror the structure of your $HOME directory
 
 Once you've cloned the repo and installed the dependencies:
 ```
-git clone https://github.com/your-username/dotfiles.git
+git clone https://github.com/Nathaniel-St-S/dotfiles.git
 cd dotfiles
 
 # Stow all configurations
 stow zsh
 stow lite-xl
+stow kitty
 ```
+
+# Or alternatively run the install script
+```
+  chmod +x setup.sh
+  ./setup.sh
+```
+
+# Remember to re-install lite-xl plugins
+
 
 - **To unstow a package (remove symlinks):**
 ```
