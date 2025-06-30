@@ -97,6 +97,16 @@ install_lpm_and_plugins() {
 
 symlink_dotfiles() {
   echo -e "${GREEN}Stowing top-level dotfiles (zsh)...${NC}"
+
+  # Handle conflicts for known files
+  for file in .zshrc .p10k.zsh; do
+    target="$HOME/$file"
+    if [ -e "$target" ] && [ ! -L "$target" ]; then
+      echo -e "${GREEN}Backing up existing $file to $file.bak${NC}"
+      mv "$target" "$target.bak"
+    fi
+  done
+
   stow --target="$HOME" zsh
 }
 
