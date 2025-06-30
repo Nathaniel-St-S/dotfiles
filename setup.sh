@@ -2,6 +2,7 @@
 set -e
 
 GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
 NC='\033[0m'
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -94,6 +95,36 @@ install_lpm_and_plugins() {
   done
 }
 
+backup_and_remove_conflicting_files() {
+  local dir="$1"
+  local source_dir="$DOTFILES_DIR/.config/$dir"
+  local target_dir="$HOME/.config/$dir"
+  
+  if [ ! -d "$source_dir" ]; then
+    return
+  fi
+  
+  echo -e "${YELLOW}Checking for conflicts in $dir...${NC}"
+  
+  # Create backup directory with timestamp
+  local timestamp=$(date +%Y%m%d_%H%M%S)
+  local backup_dir="$HOME/.config-backup/$timestamp/$dir"
+  
+  # Find all files in source and check if they exist in target
+  find "$source_dir" -type f | while read -r source_file; do
+    # Get relative path from source directory
+    local rel_path="${source_file#$source_dir/}"
+    local target_file="$target_dir/$rel_path"
+    
+    # If target file exists and is not a symlink, back it up and remove it
+    if [ -f "$target_file" ] && [ ! -L "$target_file" ]; then
+      echo -e "${YELLOW}→ Backing up and removing: $target_file${NC}"
+      mkdir -p "$(dirname "$backup_dir/$rel_path")"
+      cp "$target_file" "$backup_dir/$rel_path"
+      rm "$target_file"
+    fi
+  done
+}
 
 symlink_dotfiles() {
   echo -e "${GREEN}Stowing top-level dotfiles (zsh)...${NC}"
@@ -120,10 +151,10 @@ symlink_config_folders() {
     target_dir="$HOME/.config/$dir"
     source_dir="$DOTFILES_DIR/.config/$dir"
 
-    # If full dir exists and isn't a symlink, back it up and remove it
+    # If the entire target directory exists and isn't a symlink, back it up and remove it
     if [ -d "$target_dir" ] && [ ! -L "$target_dir" ]; then
-      echo -e "${GREEN}Backing up and removing $target_dir${NC}"
-      mv "$target_dir" "${target_dir}.bak"
+      # First, backup individual conflicting files
+      backup_and_remove_conflicting_files "$dir"
     fi
 
     echo "→ Stowing $dir → $target_dir"
@@ -143,6 +174,7 @@ set_zsh_default_shell() {
 # Run all steps
 
 mkdir -p "$HOME/.config"
+mkdir -p "$HOME/.config-backup"
 
 install_packages
 install_zinit
@@ -152,4 +184,6 @@ symlink_config_folders
 set_zsh_default_shell
 
 echo -e "${GREEN}Dotfiles setup complete!${NC}"
-
+if [ -d "$HOME/.config-backup" ] && [ "$(ls -A $HOME/.config-backup 2>/dev/null)" ]; then
+  echo -e "${YELLOW}Note: Conflicting files have been backed up to ~/.config-backup/${NC}"
+fi
