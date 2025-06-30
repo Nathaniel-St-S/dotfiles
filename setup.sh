@@ -96,13 +96,8 @@ install_lpm_and_plugins() {
 
 
 symlink_dotfiles() {
-  echo -e "${GREEN}Symlinking top-level dotfiles with stow...${NC}"
-  for file in .zshrc .p10k.zsh; do
-    if [[ -f "$DOTFILES_DIR/$file" ]]; then
-      echo "Stowing $file"
-      stow --target="$HOME" "$file"
-    fi
-  done
+  echo -e "${GREEN}Stowing top-level dotfiles (zsh)...${NC}"
+  stow --target="$HOME" zsh
 }
 
 symlink_config_folders() {
