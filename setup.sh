@@ -44,31 +44,22 @@ install_zinit() {
 }
 
 install_lpm_and_plugins() {
-  echo -e "${GREEN}Installing Lite XL Plugin Manager and plugins...${NC}"
+  echo -e "${GREEN}Installing Lite XL Plugin Manager (lpm)...${NC}"
 
-  # Check for npm (needed for lpm)
-  if ! command -v npm &>/dev/null; then
-    echo -e "${GREEN}Installing npm...${NC}"
-    if command -v apt &>/dev/null; then
-      sudo apt install -y npm
-    elif command -v pacman &>/dev/null; then
-      sudo pacman -Sy --noconfirm npm
-    elif command -v brew &>/dev/null; then
-      brew install node
-    else
-      echo "⚠️ Unsupported package manager. Please install npm manually."
-    fi
-  fi
+  # Set install location
+  LPM_BIN="$HOME/.local/bin/lpm"
+  mkdir -p "$HOME/.local/bin"
 
-  # Install lpm globally if not already
-  if ! command -v lpm &>/dev/null; then
-    echo -e "${GREEN}Installing lite-xl-plugin-manager (lpm)...${NC}"
-    npm install -g lite-xl-plugin-manager
+  if ! command -v lpm &>/dev/null && [ ! -f "$LPM_BIN" ]; then
+    echo -e "${GREEN}Downloading lpm binary...${NC}"
+    wget https://github.com/lite-xl/lite-xl-plugin-manager/releases/download/latest/lpm.x86_64-linux -O "$LPM_BIN"
+    chmod +x "$LPM_BIN"
+    export PATH="$HOME/.local/bin:$PATH"
   else
     echo "lpm is already installed."
   fi
 
-  # Install plugins using lpm
+  # Plugin list
   LITE_XL_PLUGIN_LIST=(
     lsp
     lsp_c
@@ -94,11 +85,13 @@ install_lpm_and_plugins() {
     snippets
   )
 
+  echo -e "${GREEN}Installing Lite XL plugins...${NC}"
   for plugin in "${LITE_XL_PLUGIN_LIST[@]}"; do
-    echo -e "${GREEN}Installing plugin: $plugin...${NC}"
-    lpm install "$plugin"
+    echo -e "→ Installing $plugin"
+    "$LPM_BIN" install "$plugin" --assume-yes
   done
 }
+
 
 symlink_dotfiles() {
   echo -e "${GREEN}Symlinking top-level dotfiles with stow...${NC}"
