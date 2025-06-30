@@ -12,6 +12,14 @@ return {
       }
     },
     ["plugins"] = {
+      ["gitblame"] = {
+        ["text_color"] = {
+          [1] = 183,
+          [2] = 183,
+          [3] = 183,
+          [4] = 255
+        }
+      },
       ["minimap"] = {
         ["caret_color"] = {
           [1] = 147,

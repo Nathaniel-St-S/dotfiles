@@ -81,6 +81,10 @@ install_lpm_and_plugins() {
     pdfview
     settings
     snippets
+    gitblame
+    gitdiff_highlight
+    gitopen
+    gitstatus
   )
 
   echo -e "${GREEN}Installing Lite XL plugins...${NC}"
