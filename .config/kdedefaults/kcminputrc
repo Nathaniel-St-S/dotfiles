@@ -1,2 +1,3 @@
 [Mouse]
-cursorTheme=Graphite-dark-cursors
+X11LibInputXAccelProfileFlat=true
+cursorTheme=Bibata-Modern-Ice
