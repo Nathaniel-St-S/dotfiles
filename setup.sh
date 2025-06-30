@@ -3,6 +3,7 @@ set -e
 
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
+RED='\033[0;31m'
 NC='\033[0m'
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -95,35 +96,87 @@ install_lpm_and_plugins() {
   done
 }
 
-backup_and_remove_conflicting_files() {
-  local dir="$1"
-  local source_dir="$DOTFILES_DIR/.config/$dir"
-  local target_dir="$HOME/.config/$dir"
+backup_conflicting_files() {
+  local config_name="$1"
+  local source_dir="$DOTFILES_DIR/.config/$config_name"
+  local target_dir="$HOME/.config/$config_name"
   
   if [ ! -d "$source_dir" ]; then
+    echo -e "${RED}Source directory $source_dir does not exist, skipping...${NC}"
     return
   fi
   
-  echo -e "${YELLOW}Checking for conflicts in $dir...${NC}"
+  if [ ! -d "$target_dir" ]; then
+    echo -e "${GREEN}Target directory $target_dir doesn't exist, no conflicts to resolve${NC}"
+    return
+  fi
+  
+  echo -e "${YELLOW}Resolving conflicts for $config_name...${NC}"
   
   # Create backup directory with timestamp
   local timestamp=$(date +%Y%m%d_%H%M%S)
-  local backup_dir="$HOME/.config-backup/$timestamp/$dir"
+  local backup_dir="$HOME/.config-backup/$timestamp/$config_name"
+  mkdir -p "$backup_dir"
   
-  # Find all files in source and check if they exist in target
-  find "$source_dir" -type f | while read -r source_file; do
-    # Get relative path from source directory
+  local backed_up=false
+  
+  # Check each file in the source directory
+  find "$source_dir" -type f -print0 | while IFS= read -r -d '' source_file; do
+    # Get relative path from source directory  
     local rel_path="${source_file#$source_dir/}"
     local target_file="$target_dir/$rel_path"
     
     # If target file exists and is not a symlink, back it up and remove it
     if [ -f "$target_file" ] && [ ! -L "$target_file" ]; then
-      echo -e "${YELLOW}→ Backing up and removing: $target_file${NC}"
+      echo -e "${YELLOW}  → Backing up: $rel_path${NC}"
       mkdir -p "$(dirname "$backup_dir/$rel_path")"
       cp "$target_file" "$backup_dir/$rel_path"
       rm "$target_file"
+      backed_up=true
     fi
   done
+  
+  # Clean up empty directories after removing files
+  find "$target_dir" -type d -empty -delete 2>/dev/null || true
+}
+
+force_remove_conflicts() {
+  local config_name="$1"
+  local source_dir="$DOTFILES_DIR/.config/$config_name"
+  local target_dir="$HOME/.config/$config_name"
+  
+  if [ ! -d "$source_dir" ]; then
+    return
+  fi
+  
+  echo -e "${YELLOW}Force removing conflicts for $config_name...${NC}"
+  
+  # Create backup directory with timestamp
+  local timestamp=$(date +%Y%m%d_%H%M%S)
+  local backup_dir="$HOME/.config-backup/$timestamp/$config_name"
+  
+  # Use a temporary file to collect files to process
+  local temp_file=$(mktemp)
+  find "$source_dir" -type f > "$temp_file"
+  
+  while IFS= read -r source_file; do
+    local rel_path="${source_file#$source_dir/}"
+    local target_file="$target_dir/$rel_path"
+    
+    if [ -f "$target_file" ] && [ ! -L "$target_file" ]; then
+      echo -e "${YELLOW}  → Backing up and removing: $rel_path${NC}"
+      mkdir -p "$(dirname "$backup_dir/$rel_path")"
+      cp "$target_file" "$backup_dir/$rel_path" 2>/dev/null || true
+      rm -f "$target_file"
+    fi
+  done < "$temp_file"
+  
+  rm -f "$temp_file"
+  
+  # Clean up empty directories
+  if [ -d "$target_dir" ]; then
+    find "$target_dir" -type d -empty -delete 2>/dev/null || true
+  fi
 }
 
 symlink_dotfiles() {
@@ -131,8 +184,7 @@ symlink_dotfiles() {
 
   for file in .zshrc .p10k.zsh; do
     target="$HOME/$file"
-    source="$DOTFILES_DIR/zsh/$file"
-
+    
     if [ -e "$target" ] && [ ! -L "$target" ]; then
       echo -e "${GREEN}Backing up existing $target to ${target}.bak${NC}"
       mv "$target" "${target}.bak"
@@ -144,24 +196,25 @@ symlink_dotfiles() {
 
 symlink_config_folders() {
   echo -e "${GREEN}Stowing .config folders with conflict resolution...${NC}"
+  
+  # Get list of config directories
   cd "$DOTFILES_DIR/.config"
-
-  for dir in */; do
-    dir=${dir%/}
-    target_dir="$HOME/.config/$dir"
-    source_dir="$DOTFILES_DIR/.config/$dir"
-
-    # If the entire target directory exists and isn't a symlink, back it up and remove it
-    if [ -d "$target_dir" ] && [ ! -L "$target_dir" ]; then
-      # First, backup individual conflicting files
-      backup_and_remove_conflicting_files "$dir"
-    fi
-
-    echo "→ Stowing $dir → $target_dir"
-    stow --dir="$DOTFILES_DIR/.config" --target="$HOME/.config" "$dir"
-  done
-
+  local config_dirs=($(find . -maxdepth 1 -type d -not -name "." | sed 's|^./||'))
   cd "$DOTFILES_DIR"
+  
+  for dir in "${config_dirs[@]}"; do
+    echo -e "${GREEN}Processing $dir...${NC}"
+    
+    # Force remove conflicts using the more robust method
+    force_remove_conflicts "$dir"
+    
+    # Now stow should work without conflicts
+    echo "→ Stowing $dir → $HOME/.config/$dir"
+    if ! stow --dir="$DOTFILES_DIR/.config" --target="$HOME/.config" "$dir" 2>/dev/null; then
+      echo -e "${RED}Failed to stow $dir, trying with verbose output:${NC}"
+      stow --dir="$DOTFILES_DIR/.config" --target="$HOME/.config" --verbose "$dir"
+    fi
+  done
 }
 
 set_zsh_default_shell() {
@@ -172,7 +225,6 @@ set_zsh_default_shell() {
 }
 
 # Run all steps
-
 mkdir -p "$HOME/.config"
 mkdir -p "$HOME/.config-backup"
 
@@ -184,6 +236,6 @@ symlink_config_folders
 set_zsh_default_shell
 
 echo -e "${GREEN}Dotfiles setup complete!${NC}"
-if [ -d "$HOME/.config-backup" ] && [ "$(ls -A $HOME/.config-backup 2>/dev/null)" ]; then
+if [ -d "$HOME/.config-backup" ] && [ "$(find $HOME/.config-backup -type f 2>/dev/null | wc -l)" -gt 0 ]; then
   echo -e "${YELLOW}Note: Conflicting files have been backed up to ~/.config-backup/${NC}"
 fi
