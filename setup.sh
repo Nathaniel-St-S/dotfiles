@@ -98,12 +98,13 @@ install_lpm_and_plugins() {
 symlink_dotfiles() {
   echo -e "${GREEN}Stowing top-level dotfiles (zsh)...${NC}"
 
-  # Handle conflicts for known files
   for file in .zshrc .p10k.zsh; do
     target="$HOME/$file"
+    source="$DOTFILES_DIR/zsh/$file"
+
     if [ -e "$target" ] && [ ! -L "$target" ]; then
-      echo -e "${GREEN}Backing up existing $file to $file.bak${NC}"
-      mv "$target" "$target.bak"
+      echo -e "${GREEN}Backing up existing $target to ${target}.bak${NC}"
+      mv "$target" "${target}.bak"
     fi
   done
 
@@ -116,26 +117,22 @@ symlink_config_folders() {
 
   for dir in */; do
     dir=${dir%/}
-    echo "→ Stowing $dir → $HOME/.config/$dir"
+    target_dir="$HOME/.config/$dir"
+    source_dir="$DOTFILES_DIR/.config/$dir"
 
-    # Check for existing real files that will block stow
-    for f in "$dir"/*; do
-      filename=$(basename "$f")
-      target="$HOME/.config/$dir/$filename"
+    # Backup existing config dir if it's not a symlink
+    if [ -d "$target_dir" ] && [ ! -L "$target_dir" ]; then
+      echo -e "${GREEN}Backing up $target_dir to ${target_dir}.bak${NC}"
+      mv "$target_dir" "${target_dir}.bak"
+    fi
 
-      if [ -e "$target" ] && [ ! -L "$target" ]; then
-        echo -e "${GREEN}Backing up $target to ${target}.bak${NC}"
-        mkdir -p "$(dirname "$target")"
-        mv "$target" "${target}.bak"
-      fi
-    done
-
-    # Now safe to stow
+    echo "→ Stowing $dir → $target_dir"
     stow --dir="$DOTFILES_DIR/.config" --target="$HOME/.config" "$dir"
   done
 
   cd "$DOTFILES_DIR"
 }
+
 
 
 set_zsh_default_shell() {
@@ -146,6 +143,9 @@ set_zsh_default_shell() {
 }
 
 # Run all steps
+
+mkdir -p "$HOME/.config"
+
 install_packages
 install_zinit
 install_lpm_and_plugins
