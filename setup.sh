@@ -111,15 +111,32 @@ symlink_dotfiles() {
 }
 
 symlink_config_folders() {
-  echo -e "${GREEN}Symlinking config folders with stow...${NC}"
+  echo -e "${GREEN}Stowing .config folders with conflict resolution...${NC}"
   cd "$DOTFILES_DIR/.config"
+
   for dir in */; do
     dir=${dir%/}
-    echo "Stowing $dir → $HOME/.config/$dir"
+    echo "→ Stowing $dir → $HOME/.config/$dir"
+
+    # Check for existing real files that will block stow
+    for f in "$dir"/*; do
+      filename=$(basename "$f")
+      target="$HOME/.config/$dir/$filename"
+
+      if [ -e "$target" ] && [ ! -L "$target" ]; then
+        echo -e "${GREEN}Backing up $target to ${target}.bak${NC}"
+        mkdir -p "$(dirname "$target")"
+        mv "$target" "${target}.bak"
+      fi
+    done
+
+    # Now safe to stow
     stow --dir="$DOTFILES_DIR/.config" --target="$HOME/.config" "$dir"
   done
+
   cd "$DOTFILES_DIR"
 }
+
 
 set_zsh_default_shell() {
   if [[ "$SHELL" != "$(which zsh)" ]]; then
