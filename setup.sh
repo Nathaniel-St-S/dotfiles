@@ -120,9 +120,9 @@ symlink_config_folders() {
     target_dir="$HOME/.config/$dir"
     source_dir="$DOTFILES_DIR/.config/$dir"
 
-    # Backup existing config dir if it's not a symlink
+    # If full dir exists and isn't a symlink, back it up and remove it
     if [ -d "$target_dir" ] && [ ! -L "$target_dir" ]; then
-      echo -e "${GREEN}Backing up $target_dir to ${target_dir}.bak${NC}"
+      echo -e "${GREEN}Backing up and removing $target_dir${NC}"
       mv "$target_dir" "${target_dir}.bak"
     fi
 
@@ -132,8 +132,6 @@ symlink_config_folders() {
 
   cd "$DOTFILES_DIR"
 }
-
-
 
 set_zsh_default_shell() {
   if [[ "$SHELL" != "$(which zsh)" ]]; then
