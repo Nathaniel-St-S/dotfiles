@@ -112,3 +112,6 @@ shopt -s expand_aliases
 # Enable history appending instead of overwriting.  #139609
 shopt -s histappend
 
+export GOPATH=$HOME/go
+export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
+export PATH=$PATH:$HOME/.cargo/bin

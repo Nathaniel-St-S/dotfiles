@@ -1,0 +1,12 @@
+{
+  "addons": [
+    {
+      "id": "gitdiff_highlight",
+      "mod_version": "3",
+      "name": "gitdiff_highlight",
+      "path": ".",
+      "type": "plugin",
+      "version": "0.1"
+    }
+  ]
+}

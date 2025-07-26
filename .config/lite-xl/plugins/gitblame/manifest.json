@@ -1,0 +1,15 @@
+{
+  "addons": [
+    {
+      "id": "gitblame",
+      "name": "Git Blame",
+      "description": "Shows git blame information.",
+      "version": "0.2.1",
+      "mod_version": "3",
+      "tags": [
+        "git",
+        "blame"
+      ]
+    }
+  ]
+}

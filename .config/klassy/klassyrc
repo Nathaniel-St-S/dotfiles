@@ -8,9 +8,14 @@ FullHeightButtonSpacingRight=0
 LockFullHeightButtonSpacingLeftRight=false
 
 [Global]
-LookAndFeelSet=com.github.vinceliuice.Graphite-dark
+LookAndFeelSet=org.manjaro.breath-dark.desktop
 
 [Windeco]
 ButtonIconStyle=StyleOxygen
 IconSize=IconLarge
+UseTitleBarColorForAllBorders=false
 WindowCornerRadius=10
+
+[WindowOutlineStyle]
+WindowOutlineAccentColorOpacityActive=0
+WindowOutlineContrastOpacityInactive=0

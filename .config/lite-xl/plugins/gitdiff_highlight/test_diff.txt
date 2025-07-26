@@ -1,0 +1,51 @@
+diff --git a/src/main.c b/src/main.c
+index 8193d20..f71e3bc 100644
+--- a/src/main.c
++++ b/src/main.c
+@@ -19,33 +19,34 @@
+
+int game_looping = 1;
+
+int direction = LEFT; {+// modified line+}
+
+int highscore = 0;
+
+int game[GAME_RES][GAME_RES]; // 0 is black, 1 is snake, 2 is apple
+
+[-int snake[1000][3]; // is it there? x, y-]
+
+[-int snake_len = 15;-]
+[-int apple_pos[2];-]
+
+int score = 0;
+
+int rand_range(int min, int max) { [-srandom(time(0));-]{+// modified block+}
+{+	urmom(time(0));+}
+	return [-(random()-]{+(urmom()+} % (max - min + 1)) + min; {+// haha+}
+}
+
+void draw_frame() {
+	gfx_SetDrawBuffer();
+	gfx_FillScreen(0);
+	
+	{+/*+}
+{+	 *  Added block+}
+{+	 * there's new stuff in here+}
+{+	 */+}
+	
+	char text_score[13]; // max seven digit number score
+	[-sprintf(text_score,-]{+sprint(text_score,+} "score %d", score);
+	fontlib_ClearWindow();
+	fontlib_SetCursorPosition(5, fontlib_GetWindowYMin());
+	fontlib_DrawString(text_score); {+// single modification+}
+	
+	if (highscore > 0) {
+		char text_hs[16];
+@@ -231,7 +232,7 @@ int main(void) {
+		//game_looping++;
+	}
+
+	gfx_End(); {+// change in other hunk+}
+
+	return 0;
+}

@@ -101,3 +101,6 @@ alias ls='ls --color'
 #Shell integrations
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
+export GOPATH=$HOME/go
+export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
+export PATH=$PATH:$HOME/.cargo/bin

@@ -9,6 +9,9 @@ Rows=1
 [ElectricBorders]
 BottomLeft=ApplicationLauncher
 
+[TabBox]
+LayoutName=org.kde.breeze.desktop
+
 [Tiling]
 padding=4
 
@@ -20,5 +23,5 @@ tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"wi
 
 [org.kde.kdecoration2]
 NoPlugin=false
-library=org.kde.kwin.aurorae
-theme=__aurorae__svg__Graphite-dark-round
+library=org.kde.breeze
+theme=Breeze
